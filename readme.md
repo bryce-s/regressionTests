@@ -7,7 +7,7 @@ log issues reported by ``runRegressionTests,py`` to ``failureLog.txt``, parse an
 clone directory to project folder, then
 ```
 sh regressionTests/install.sh
-sh regressionTests/runRegressionTests.sh
+sh regressionTests/runRegressionTests.sh # could put this in vscode
 ```
 
 # Contains:
