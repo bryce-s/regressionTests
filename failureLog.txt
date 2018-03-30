@@ -1,1 +1,0 @@
-diff  tests/correct/spec.mc.4.2.1.correct.as tests/simulatorOutput/spec.mc.4.2.1.sim

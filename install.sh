@@ -1,6 +1,7 @@
 set -e
 set -x
 brew install coreutils
+brew install clang-format
 # make scripts executable by sys calls
 chmod +x regressionTests/openTerminalAndPrint.sh
 chmod +x regressionTests/reportResults.py
