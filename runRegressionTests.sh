@@ -66,7 +66,7 @@ compileAndCheckStatus() {
     echo "compiled!"
     else 
     echo "gcc failed. exiting"
-    return 1
+    exit 1
    fi
 }
 
