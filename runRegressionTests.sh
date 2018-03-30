@@ -24,7 +24,8 @@ simulateOutput() {
         mcfilename=$(echo $mcfile | cut -d '/' -f3)
         blockSizeInWords=$(echo $mcfile | cut -d '.' -f3)
         numberOfSets=$(echo $mcfile | cut -d '.' -f4)
-        blockPerSet=$(echo $mcfile | cut -d '.' -f5) 
+        blockPerSet=$(echo $mcfile | cut -d '.' -f5)
+        gtimeout 2 ./simDebug $mcfile $blockSizeInWords $numberOfSets $blockPerSet > tests/simulatorOutput/$mcfilename.sim
         if [ $? -eq 124 ]; then
             echo "the command timed out"
             echo "timeout " $mcfile "blank"
@@ -68,6 +69,8 @@ compileAndCheckStatus() {
     return 1
    fi
 }
+
+compileAndCheckStatus
 
 runOutput
 reportResults
