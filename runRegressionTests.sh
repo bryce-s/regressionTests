@@ -1,6 +1,6 @@
-set -e
 set -x
 clang-format -i -style=WebKit *.c 
+rm -f regressionTests/failureLog.txt
 
 assembleTests() {
     for asfile in tests/rawAssembly/*.as.*
@@ -12,6 +12,7 @@ assembleTests() {
         if [ $? -eq 124 ]; then # $? accepts return val from gtimeout, if took >= 2 seconds,
                                 # iff return val == 124; it timed out.
             echo "the command timed out"
+            echo "timeout " $mcfile "blank"
             # do something
         fi
     done
@@ -24,10 +25,9 @@ simulateOutput() {
         blockSizeInWords=$(echo $mcfile | cut -d '.' -f3)
         numberOfSets=$(echo $mcfile | cut -d '.' -f4)
         blockPerSet=$(echo $mcfile | cut -d '.' -f5) 
-        gtimeout 2 ./simDebug $mcfile $blockSizeInWords $numberOfSets $blockPerSet > tests/simulatorOutput/$mcfilename.sim
         if [ $? -eq 124 ]; then
             echo "the command timed out"
-            # do something here
+            echo "timeout " $mcfile "blank"
         fi
     done
 }
@@ -37,7 +37,13 @@ diffResults() {
     do
         correctFilename=$(echo $correctFile | cut -d '/' -f3)
         targetName=$(echo $correctFilename | cut -d '.' -f 1,2,3,4,5).sim
-        vimdiff $correctFile tests/simulatorOutput/$targetName
+        #vimdiff $correctFile tests/simulatorOutput/$targetName
+
+        DIFF=$(diff $correctFile tests/simulatorOutput/$targetName)
+        if [ $? != 0 ]; then
+            echo "diffs don't match!";
+            echo "diff " $correctFile tests/simulatorOutput/$targetName >> regressionTests/failureLog.txt;
+        fi
     done
 }
 
@@ -63,5 +69,6 @@ compileAndCheckStatus() {
    fi
 }
 
-
+runOutput
 reportResults
+#done!
