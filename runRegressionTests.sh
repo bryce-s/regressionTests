@@ -9,7 +9,7 @@ assembleTests() {
         outfilename=$(echo $asfilename | cut -d '/' -f3)
         postfix=$(echo $asfile | cut -d '.' -f 3,4,5)
         gtimeout 2 ./assem $asfile tests/assemblerOutput/$outfilename.mc.$postfix
-        if [ $? -eq 124 ]; then # $? accepts return val from gtimeout, if took >= 2 seconds,
+        if [ $? -eq 124 ] || [ $? -eq 1 ] ; then # $? accepts return val from gtimeout, if took >= 2 seconds,
                                 # iff return val == 124; it timed out.
             echo "the command timed out"
             echo "timeout " $mcfile "blank"
@@ -26,7 +26,7 @@ simulateOutput() {
         numberOfSets=$(echo $mcfile | cut -d '.' -f4)
         blockPerSet=$(echo $mcfile | cut -d '.' -f5)
         gtimeout 2 ./simDebug $mcfile $blockSizeInWords $numberOfSets $blockPerSet > tests/simulatorOutput/$mcfilename.sim
-        if [ $? -eq 124 ]; then
+        if [ $? -eq 124 ] || [ $? -eq 1 ] ; then
             echo "the command timed out"
             echo "timeout " $mcfile "blank"
         fi
@@ -41,7 +41,7 @@ diffResults() {
         #vimdiff $correctFile tests/simulatorOutput/$targetName
 
         DIFF=$(diff $correctFile tests/simulatorOutput/$targetName)
-        if [ $? != 0 ]; then
+        if [ $? != 0 ] ; then
             echo "diffs don't match!";
             echo "diff " $correctFile tests/simulatorOutput/$targetName >> regressionTests/failureLog.txt;
         fi
